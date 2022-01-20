@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="static/css/bootstrap.min.css">
+      <link rel="stylesheet" href="static/css/bootstrap-table.min.css">
+      <link rel="stylesheet" href="static/css/bootstrap-editable.css">
+
+    <title>Peliculas Star Wars</title>
+  </head>
+  <body>
+    <div class="container">
+
+<p>volver a pagina <a href="/">Principal</a></p>
+<h1>PELICULAS STAR WARS</h1>
+
+<table id="table"
+			 data-toggle="table"
+			 data-search="true"
+			 data-filter-control="true"
+			 data-click-to-select="true"
+			 data-toolbar="#toolbar"
+       class="table-responsive">
+	<thead>
+		<tr>
+			<th data-field="titulo_pelicula" data-sortable="true">Titulo Pelicula</th>
+			<th data-field="id_episodio" data-filter-control="select" data-sortable="true">ID Episodio</th>
+			<th data-field="director" data-filter-control="select" data-sortable="true">Director</th>
+			<th data-field="descripcion" data-sortable="true">Descripción</th>
+			<th data-field="fecha_lanzamiento" data-sortable="true">Fecha lanzamiento</th>
+		</tr>
+	</thead>
+	<tbody>
+	 {% for pelicula in peliculas %}
+	 		<tr>
+				<td>{{ pelicula.title }}</td>
+				<td>{{ pelicula.episode_id }}</td>
+				<td>{{ pelicula.director }}</td>
+				<td>{{ pelicula.opening_crawl }}</td>
+				<td>{{ pelicula.release_date }}</td>
+			</tr>
+     {% endfor %}
+
+
+	</tbody>
+</table>
+
+
+</div>
+
+	<script src="static/js/jquery.min.js"></script>
+	<script src="static/js/bootstrap.min.js"></script>
+	<script src="static/js/bootstrap-table.js"></script>
+	<script src="static/js/bootstrap-table-editable.js"></script>
+	<script src="static/js/bootstrap-table-filter-control.js"></script>
+
+  	<script>
+
+
+		$("tbody").on("click", ".btn-modal", function() {
+			var pelicula_id = $(this).parent().children()[1].innerHTML
+			console.log(pelicula_id)
+
+
+
+			$.getJSON('http://localhost:5000/traer_personajes_pelicula', {
+			  pelicula_id: pelicula_id
+			}, function(data) {
+			  var result = data.result;
+
+			  var total_body = ''
+			  for (var i = 0; i < result.length; i++)
+				{
+					var temp_text = `
+								<tr>
+								  <td>` + result[i]['name'] + `</td>
+								  <td>`+ result[i]['eye_color'] +`</td>
+								  <td>`+ result[i]['hair_color'] +`</td>
+								  <td>`+ result[i]['birth_year'] +`</td>
+								</tr>
+								`
+					  total_body = total_body + temp_text
+				}
+
+
+				console.log("#personajes_"+pelicula_id)
+			  $('#personajes_'+pelicula_id).append(total_body)
+
+			});
+
+			   });
+
+	</script>
+  </body>
+</html>
